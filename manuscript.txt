@@ -1,0 +1,8 @@
+Manuscript Title
+AetherGrid-Sovereign: Quantum-Fuzzy Heterogeneous Graph Transformer for Cascading Failure Prediction in Urban Digital Twins
+
+Abstract
+AetherGrid-Sovereign is a quantum-fuzzy heterogeneous graph transformer for forecasting cascading failures in Urban Digital Twins. The framework integrates intuitionistic fuzzy attention with a complex phase term to encode hesitation and sensor decay, yielding a mathematically constrained attention operator in intuitionistic fuzzy space. We formalize graph integrity as feasibility constraints over typed nodes and edges and provide complexity bounds for Q-AVOA driven architecture search over HGT configurations, characterizing search cost in terms of population size and iterations. A rigorous ablation study isolates (i) standard HGT, (ii) HGT with intuitionistic fuzzy attention, and (iii) full quantum-fuzzy attention, demonstrating that the phase term provides the final performance gain beyond fuzzy logic alone. To function as an expert system, the model produces calibrated failure probabilities with uncertainty margins that map to actionable risk tiers and intervention priorities for planners and infrastructure engineers. The methodology explicitly fuses heterogeneous sources by aligning static spatial graphs with dynamic atmospheric time series via shared embedding spaces, temporal encodings, and relation specific transformations, enabling principled integration of multi-modal urban data.
+
+Keywords
+Urban Digital Twins; cascading failure prediction; heterogeneous graph transformer; intuitionistic fuzzy attention; quantum phase; neural architecture search; expert system; data heterogeneity; ablation study

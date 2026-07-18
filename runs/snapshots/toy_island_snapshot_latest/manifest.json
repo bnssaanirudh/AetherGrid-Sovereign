@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "id": "toy_island_snapshot_latest",
+  "timestamp": "2026-07-15 18:32:10.133999",
+  "source": "toy_island_offline_fixture",
+  "is_synthetic": true,
+  "validation_status": "verified",
+  "snapshot_hash": "d1196388c18174fafcbe322d5ae948e2dd99bb23f7b35f7a27a7c60906fa1d92",
+  "node_counts": {
+    "road_segment": 2,
+    "power_node": 1,
+    "poi_social_node": 1
+  },
+  "edge_counts": {
+    "powers": 1,
+    "connects": 2
+  },
+  "parent_snapshot_hash": null
+}

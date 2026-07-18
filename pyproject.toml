@@ -1,0 +1,61 @@
+[project]
+name = "aethergrid-sovereign"
+version = "0.1.0"
+description = "Quantum-Fuzzy Heterogeneous Graph Transformer for cascading failure prediction."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+dependencies = [
+  "torch>=2.0.0",
+  "torch-geometric>=2.4.0",
+  "scikit-fuzzy>=0.4.2",
+  "pydantic>=2.0.0",
+  "numpy>=1.20.0",
+  "scipy>=1.8.0",
+  "networkx>=3.0",
+  "pandas>=1.5.0",
+  "tqdm>=4.60.0",
+  "PyYAML>=6.0",
+  "duckdb>=0.8.0",
+]
+
+[project.optional-dependencies]
+geo = [
+  "osmnx>=1.3.0",
+  "matplotlib>=3.5.0",
+  "seaborn>=0.12.0",
+]
+quantum = [
+  "pennylane>=0.30.0",
+]
+api = [
+  "fastapi>=0.95.0",
+  "uvicorn>=0.20.0",
+]
+webdev = [
+  "streamlit>=1.20.0",
+]
+training = [
+  "accelerate>=0.20.0",
+  "bitsandbytes>=0.39.0",
+  "scikit-learn>=1.2.0",
+]
+dev = [
+  "pytest>=7.0",
+  "ruff>=0.1.0",
+  "mypy>=1.0.0",
+]
+
+[project.scripts]
+aethergrid-train = "experiments.train:main"
+aethergrid-nas = "experiments.run_nas:main"
+aethergrid = "aethergrid_core.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "aethergrid_core" = "packages/aethergrid_core/aethergrid_core", "graph_builder" = "packages/graph_builder/graph_builder", "sovereign_watchdog" = "packages/sovereign_watchdog/sovereign_watchdog", "models" = "packages/models/models", "aethergrid_legacy" = "packages/aethergrid_legacy", "evaluation" = "packages/evaluation/evaluation", "training" = "packages/training/training", "sampling" = "packages/sampling/sampling", "theory" = "packages/theory/theory" }
+packages = ["aethergrid_core", "graph_builder", "sovereign_watchdog", "models", "aethergrid_legacy", "evaluation", "training", "sampling", "theory"]

@@ -1,0 +1,25 @@
+
+\section{Appendix: Topology-Preserving Phase Theorem}
+
+\subsection{Formal Statement}
+Let $\mathcal{H}$ be a complex-valued embedding space where node representations reside. For any magnitude term $a \in \mathbb{C}$ and any phase angle $\theta \in \mathbb{R}$ induced by the quantum-fuzzy attention mechanism, we define the local phase transform as:
+\begin{equation}
+T_{\theta}(a) = a \cdot e^{i\theta}
+\end{equation}
+
+\textbf{Theorem 1 (Magnitude Preservation).} Under the standard complex norm $\|z\| = \sqrt{\text{Re}(z)^2 + \text{Im}(z)^2}$, the phase transform $T_{\theta}$ is an isometry with respect to the origin. That is, $\|T_{\theta}(a)\| = \|a\|$.
+
+\begin{proof}
+By definition of the complex exponential, $e^{i\theta} = \cos(\theta) + i\sin(\theta)$.
+The norm of the exponential is:
+\begin{equation}
+\|e^{i\theta}\| = \sqrt{\cos^2(\theta) + \sin^2(\theta)} = 1
+\end{equation}
+Using the multiplicative property of the complex norm ($\|z_1 z_2\| = \|z_1\| \|z_2\|$):
+\begin{equation}
+\|T_{\theta}(a)\| = \|a \cdot e^{i\theta}\| = \|a\| \cdot \|e^{i\theta}\| = \|a\| \cdot 1 = \|a\|
+\end{equation}
+\end{proof}
+
+\subsection{Operational Interpretation}
+This theorem strictly proves that the local phase shift applied during temporal attention does not alter the structural magnitude of the node embedding. It is \textit{not} a proof of whole-network topology preservation under cascade dynamics, nor does it guarantee predictive robustness against adversarial perturbations in the input features.

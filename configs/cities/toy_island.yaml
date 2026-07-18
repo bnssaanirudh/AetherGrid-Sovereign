@@ -1,0 +1,33 @@
+city_id: "toy_island"
+display_name: "Toy Island district"
+bounding_box: [-1.5, 50.5, -1.4, 50.6]
+crs: "EPSG:32630" # UTM zone 30N
+timezone: "Europe/London"
+sensitivity_class: "low"
+enabled_node_types:
+  - "road_segment"
+  - "power_node"
+  - "weather_station"
+  - "poi_social_node"
+enabled_edge_types:
+  - ["power_node", "powers", "poi_social_node"]
+  - ["road_segment", "connects", "poi_social_node"]
+osm:
+  highway_filters: ["primary", "secondary", "tertiary"]
+  power_filters: ["generator", "substation", "line"]
+  simplification_tolerance: 2.0
+weather:
+  grid_spacing_meters: 500.0
+  time_step_hours: 1
+  features: ["temperature", "wind_speed"]
+outage:
+  schema_type: "CSV"
+  confidence_threshold: 0.7
+  is_synthetic: true
+poi:
+  aggregation_method: "cell_count"
+  grid_size_meters: 200.0
+  categories: ["healthcare", "education"]
+anonymization:
+  coordinate_precision_meters: 50.0
+  remove_names: true

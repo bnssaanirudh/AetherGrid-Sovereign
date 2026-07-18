@@ -1,0 +1,9 @@
+2026-07-15 22:21:07,781 [INFO] Building urban heterogeneous graph...
+2026-07-15 22:21:07,781 [INFO] UrbanGraphConstructor initialized with config: GraphConfig(num_power=4, num_hospital=3, num_road=8, num_citizen=5, edge_density=0.2, add_self_loops=False, normalize_features=True, seed=123, use_toy_data=True, toy_data_path='./data/toy_graph.json')
+2026-07-15 22:21:07,986 [INFO] AetherHGT initialised | layers=1 | heads=2 | dim=32 | quant=False | family=IFS
+2026-07-15 22:21:07,995 [INFO] Model: 47842 trainable parameters
+2026-07-15 22:21:08,062 [INFO] Starting training for 1 epochs...
+2026-07-15 22:21:08,141 [INFO] [Watchdog] ValidationReport(epoch=1, passed=37/37, failed=0, overall=\u2713 OK)
+2026-07-15 22:21:08,513 [INFO] Epoch   1/1 | train=0.1086 | val=0.0665 | mse=0.0166 | mae=0.1163 | lr=0.00000 | t=0.45s
+2026-07-15 22:21:08,581 [INFO] Saved versioned checkpoint to runs\experiment\best_model.pt
+2026-07-15 22:21:08,650 [INFO] Training complete. Best val loss: 0.0665

@@ -1,0 +1,64 @@
+# Quick experiment config (small, fast)
+
+model:
+  hidden_dim: 32
+  num_layers: 1
+  num_heads: 2
+  dropout: 0.1
+  quantize: false
+
+training:
+  epochs: 1
+  learning_rate: 0.001
+  weight_decay: 1.0e-5
+  batch_size: 1
+  grad_clip: 1.0
+  patience: 2
+  device: "cpu"
+  seed: 123
+  deterministic: false
+  val_ratio: 0.2
+  output_dir: "runs/experiment"
+  task_type: "regression_size"
+  labels:
+    mode: "synthetic"
+    path: ""
+profile: "research"
+fuzzy_family: "IFS"
+
+nas:
+  enabled: false
+  population_size: 5
+  max_iter: 5
+  proxy_epochs: 1
+  chaotic_map: "tent"
+  max_time_seconds: 30
+  patience: 5
+  min_delta: 1.0e-4
+  history_csv_path: "runs/experiment/nas_history.csv"
+  search_space_path: "configs/nas_search_space.yaml"
+
+graph:
+  num_power: 4
+  num_hospital: 3
+  num_road: 8
+  num_citizen: 5
+  edge_density: 0.2
+  normalize_features: true
+  seed: 123
+  use_toy_data: true
+  toy_data_path: "./data/toy_graph.json"
+
+watchdog:
+  strict: true
+  run_every_n_epochs: 1
+
+logging:
+  level: INFO
+  log_file: "runs/experiment/aethergrid.log"
+
+datasets:
+  osm_cache_dir: "./data/cache"
+  weatherbench_dir: "./data/weatherbench"
+  urban_kg_dir: "./data/urban_kg"
+  toy_graph_path: "./data/toy_graph.json"

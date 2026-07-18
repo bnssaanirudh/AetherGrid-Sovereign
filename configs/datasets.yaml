@@ -1,0 +1,7 @@
+# Dataset paths and cache roots
+
+datasets:
+  osm_cache_dir: "./data/cache"
+  weatherbench_dir: "./data/weatherbench"
+  urban_kg_dir: "./data/urban_kg"
+  toy_graph_path: "./data/toy_graph.json"

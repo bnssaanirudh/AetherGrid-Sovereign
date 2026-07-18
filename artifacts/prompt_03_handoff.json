@@ -1,0 +1,42 @@
+{
+  "changed_files": [
+    "core/fuzzy_state.py",
+    "core/phase_generator.py",
+    "core/cv_pfa_attention.py",
+    "core/cv_hgt_conv.py",
+    "core/model_registry.py",
+    "core/hgt_model.py",
+    "core/__init__.py",
+    "tests/unit/test_math_properties.py",
+    "tests/unit/test_cv_pfa.py",
+    "profiling/benchmark.py",
+    "docs/method_note.md"
+  ],
+  "migrations": [
+    "Archived 'core/fuzzy_attention.py' to 'legacy/'",
+    "Archived 'core/quantum_fuzzy_fusion.py' to 'legacy/'"
+  ],
+  "commands_run": [
+    "pytest tests/unit/test_math_properties.py tests/unit/test_cv_pfa.py -v",
+    "python profiling/benchmark.py"
+  ],
+  "test_results": "4/4 property tests passed. 4/4 structural tests passed. Hard dropout ablation verified.",
+  "measured_limitations": {
+    "mixed_precision_complex": "torch.complex32 is minimally supported; mixed precision float16 requires upcasting to float32 before calling torch.polar.",
+    "benchmarks": {
+      "real_hgt": {"latency_ms": 16.19, "peak_memory_mb": 0.0},
+      "cv_pfa_analytic": {"latency_ms": 19.68, "peak_memory_mb": 0.0},
+      "cv_pfa_mlp": {"latency_ms": 18.3, "peak_memory_mb": 0.0}
+    }
+  },
+  "known_risks": [
+    "Edge indices with zero length (no connections) require explicit short-circuiting to prevent softmax NaN cascades.",
+    "Complex-to-real aggregation discards the imaginary component; a deeper fully-complex downstream head could retain more phase capacity but risks stability."
+  ],
+  "starting_point_for_next_prompt": "The complex-valued CV-PFA baseline is fully tested and integrated via ModelRegistry. We are ready to implement the real VQCPhaseGenerator for Prompt 4.",
+  "numerical_verification": {
+    "PFS_IFS_tolerance": 1e-5,
+    "magnitude_preservation_tolerance": 1e-5,
+    "topology_min_bound": 0.1
+  }
+}

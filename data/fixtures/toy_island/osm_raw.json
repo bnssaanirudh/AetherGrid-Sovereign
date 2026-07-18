@@ -1,0 +1,13 @@
+{
+  "nodes": [
+    {"id": "road_0", "type": "road_segment", "lon": -1.45, "lat": 50.55, "name": "Primary Road A"},
+    {"id": "road_1", "type": "road_segment", "lon": -1.42, "lat": 50.58, "name": "Secondary Road B"},
+    {"id": "power_0", "type": "power_node", "lon": -1.48, "lat": 50.52, "name": "Substation Alpha"},
+    {"id": "poi_0", "type": "poi_social_node", "lon": -1.44, "lat": 50.56, "name": "District Hospital"}
+  ],
+  "edges": [
+    {"src": "road_0", "dst": "road_1", "type": "connects"},
+    {"src": "power_0", "dst": "poi_0", "type": "powers"},
+    {"src": "road_0", "dst": "poi_0", "type": "connects"}
+  ]
+}

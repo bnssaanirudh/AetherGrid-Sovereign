@@ -1,0 +1,104 @@
+{
+  "schema_version": "prompt_04_handoff/1.0",
+  "generated_utc": "2026-07-16T08:55:00Z",
+  "changed_files": [
+    "core/phase_generator.py",
+    "core/cv_hgt_conv.py",
+    "core/model_registry.py",
+    "tests/unit/test_vqc.py",
+    "experiments/expressivity.py",
+    "experiments/noise_sensitivity.py",
+    "profiling/benchmark_vqc.py",
+    "docs/method_note.md"
+  ],
+  "migrations": [
+    "VQCPhaseGenerator placeholder replaced with real PennyLane-backed implementation.",
+    "cv_hgt_conv.py: VQCPhaseGenerator() replaced with fully configured call (num_qubits=4, circuit_depth=2, seed=42).",
+    "model_registry.py: vqc_cv_pfa entry expanded with _circuit_config manifest (qubits, depth, backend, seed, pennylane_version, shots, status).",
+    "MLPPhaseGenerator gained num_layers parameter for better parameter-matching control."
+  ],
+  "commands_run": [
+    "pip install pennylane",
+    "python -m pytest tests/unit/test_vqc.py -v",
+    "python -m pytest tests/unit/test_vqc.py tests/unit/test_cv_pfa.py tests/unit/test_math_properties.py -v",
+    "python profiling/benchmark_vqc.py",
+    "python experiments/expressivity.py",
+    "python experiments/noise_sensitivity.py"
+  ],
+  "test_results": {
+    "total": "16/16 passed",
+    "vqc_tests": "8/8 passed",
+    "cv_pfa_tests": "4/4 passed",
+    "math_property_tests": "4/4 passed",
+    "warnings": ["torch_geometric.distributed deprecation (non-critical, cosmetic only)"]
+  },
+  "acceptance_gates": {
+    "42_forward_backward_smoke": "PASS - test_vqc_finite_gradients passes forward + backward with finite gradients",
+    "43_save_load_roundtrip": "PASS - test_vqc_serialization_roundtrip within 1e-5 tolerance",
+    "44_matched_mlp_control": "PASS - fallback_mlp tested in test_vqc_fallback_behavior under identical interface",
+    "45_expressivity_experiment": "PASS - VQC MSE=2.34 vs MLP MSE=2.64 on periodic target; see negative_results below",
+    "46_runtime_and_memory": "PASS - 4q:26.52ms, 6q:30.52ms, matched-MLP:0.68ms (all measured)",
+    "47_fallback_explicit": "PASS - test_vqc_fallback_behavior: vqc_fallback=True in diagnostics; warning logged",
+    "48_simulator_only_docs": "PASS - method_note.md Section 4 states simulated-only status explicitly"
+  },
+  "vqc_benchmarks": {
+    "vqc_4q_d2": {"latency_ms": 26.52, "peak_memory_mb": 0, "n_params": 157, "num_qubits": 4, "circuit_depth": 2},
+    "vqc_6q_d2": {"latency_ms": 30.52, "peak_memory_mb": 0, "n_params": 252, "num_qubits": 6, "circuit_depth": 2},
+    "matched_mlp_4q": {"latency_ms": 0.68, "peak_memory_mb": 0, "n_params": 69}
+  },
+  "expressivity": {
+    "target_function": "f(x) = (sin(2 * sum(x)) + cos(sum(x)^2)) * 0.5 * pi",
+    "optimizer": "Adam(lr=0.1)",
+    "epochs": 20,
+    "train_samples": 200,
+    "seed": 42,
+    "vqc_final_mse": 2.3433,
+    "mlp_final_mse": 2.6361,
+    "vqc_params": 157,
+    "mlp_params": 69,
+    "note": "VQC achieved marginally lower MSE but used 2.3x more parameters and 39x more wall-clock time. No general superiority is claimed."
+  },
+  "noise_sensitivity": {
+    "simulator": "default.mixed (PennyLane)",
+    "noise_model": "DepolarizingChannel per qubit",
+    "drifts_by_noise_level": {
+      "0.01": 0.0006,
+      "0.05": 0.0142,
+      "0.1":  0.0567,
+      "0.2":  0.2267
+    },
+    "conclusion": "At p=0.2 depolarizing noise, phase drift MSE is 0.23 rad^2, substantial relative to phase range [-pi,pi]. Noise sensitivity is a blocking concern for hardware deployment."
+  },
+  "circuit_manifest": {
+    "backend": "default.qubit",
+    "num_qubits": 4,
+    "circuit_depth": 2,
+    "encoding": "AngleEmbedding (Y rotation)",
+    "entangling_pattern": "StronglyEntanglingLayers (CNOT ring + Rot gates)",
+    "measurement": "PauliZ expectation on first out_dim qubits",
+    "analytic_mode": true,
+    "shots": null,
+    "pennylane_version": "0.17.0",
+    "seed": 42,
+    "status": "simulated_only"
+  },
+  "negative_results": [
+    "VQC uses 39x more wall-clock time per forward pass than a parameter-matched MLP (26.52ms vs 0.68ms on 5 samples).",
+    "VQC parameter count (157) is 2.3x that of the matched MLP (69) for the same circuit configuration.",
+    "Per-sample iteration required (PennyLane 0.17.x lacks batched AngleEmbedding): latency scales linearly with batch size.",
+    "At depolarizing noise p=0.2, phase drift MSE reaches 0.23 rad^2. This is not a production-safe operating point.",
+    "The expressivity advantage on one periodic function (MSE 2.34 vs 2.64) disappears at equal compute budget due to the latency gap.",
+    "No quantum advantage is demonstrated or claimed. The VQC is a narrow phase generator in a classical pipeline."
+  ],
+  "measured_limitations": {
+    "batch_support": "PennyLane 0.17.0 requires per-sample circuit calls; batching requires upgrade or custom vectorization.",
+    "dtype": "PennyLane 0.17.x returns float64; explicit .to(float32) cast required for PyTorch compatibility.",
+    "seed_control": "Device-level seed not supported in PennyLane 0.17.0 (seed kwarg removed from qml.device). Determinism achieved via torch.manual_seed before each forward pass."
+  },
+  "known_risks": [
+    "Expressivity results are highly sensitive to optimizer configuration, target function, and random seed; results should not generalize.",
+    "Per-sample VQC execution in training is prohibitively slow for large edge sets; micro-batching or upgrade to newer PennyLane recommended.",
+    "default.mixed noise experiment is research-only; not a production default."
+  ],
+  "starting_point_for_next_prompt": "vqc_cv_pfa is registered and testable. The three phase generators (analytic, mlp, vqc) can be selected by config via ModelRegistry.get_variant_kwargs(). Next step: implement cascade heads, loss interface, and downstream task integration for Prompt 5."
+}

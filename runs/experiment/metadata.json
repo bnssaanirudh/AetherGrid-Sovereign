@@ -1,0 +1,197 @@
+{
+  "best_val_loss": 0.06654971837997437,
+  "arch": {
+    "hidden_dim": 32,
+    "num_layers": 1,
+    "num_heads": 2,
+    "dropout": 0.1,
+    "quantize": false,
+    "node_types": [
+      "power",
+      "hospital",
+      "road",
+      "citizen"
+    ],
+    "edge_types": [
+      [
+        "power",
+        "supplies",
+        "hospital"
+      ],
+      [
+        "power",
+        "energizes",
+        "road"
+      ],
+      [
+        "road",
+        "connects",
+        "citizen"
+      ],
+      [
+        "hospital",
+        "serves",
+        "citizen"
+      ],
+      [
+        "citizen",
+        "occupies",
+        "road"
+      ],
+      [
+        "power",
+        "links",
+        "power"
+      ],
+      [
+        "road",
+        "intersects",
+        "road"
+      ]
+    ],
+    "feature_dims": {
+      "power": 16,
+      "hospital": 12,
+      "road": 10,
+      "citizen": 8
+    },
+    "fuzzy_family": "IFS"
+  },
+  "config": {
+    "model": {
+      "hidden_dim": 32,
+      "num_layers": 1,
+      "num_heads": 2,
+      "dropout": 0.1,
+      "quantize": false,
+      "node_types": [
+        "power",
+        "hospital",
+        "road",
+        "citizen"
+      ],
+      "edge_types": [
+        [
+          "power",
+          "supplies",
+          "hospital"
+        ],
+        [
+          "power",
+          "energizes",
+          "road"
+        ],
+        [
+          "road",
+          "connects",
+          "citizen"
+        ],
+        [
+          "hospital",
+          "serves",
+          "citizen"
+        ],
+        [
+          "citizen",
+          "occupies",
+          "road"
+        ],
+        [
+          "power",
+          "links",
+          "power"
+        ],
+        [
+          "road",
+          "intersects",
+          "road"
+        ]
+      ],
+      "feature_dims": {
+        "power": 16,
+        "hospital": 12,
+        "road": 10,
+        "citizen": 8
+      },
+      "fuzzy_family": "IFS"
+    },
+    "training": {
+      "epochs": 1,
+      "learning_rate": 0.001,
+      "weight_decay": 1e-05,
+      "batch_size": 1,
+      "grad_clip": 1.0,
+      "patience": 2,
+      "device": "cpu",
+      "seed": 123,
+      "deterministic": false,
+      "val_ratio": 0.2,
+      "output_dir": "runs/experiment",
+      "task_type": "regression_size",
+      "labels": {
+        "mode": "synthetic",
+        "path": ""
+      }
+    },
+    "profile": "research",
+    "fuzzy_family": "IFS",
+    "nas": {
+      "enabled": false,
+      "population_size": 5,
+      "max_iter": 5,
+      "proxy_epochs": 1,
+      "chaotic_map": "tent",
+      "max_time_seconds": 30,
+      "patience": 5,
+      "min_delta": 0.0001,
+      "history_csv_path": "runs/experiment/nas_history.csv",
+      "search_space_path": "configs/nas_search_space.yaml"
+    },
+    "graph": {
+      "num_power": 4,
+      "num_hospital": 3,
+      "num_road": 8,
+      "num_citizen": 5,
+      "edge_density": 0.2,
+      "normalize_features": true,
+      "seed": 123,
+      "use_toy_data": true,
+      "toy_data_path": "./data/toy_graph.json"
+    },
+    "watchdog": {
+      "strict": true,
+      "run_every_n_epochs": 1
+    },
+    "logging": {
+      "level": "INFO",
+      "log_file": "runs/experiment/aethergrid.log"
+    },
+    "datasets": {
+      "osm_cache_dir": "./data/cache",
+      "weatherbench_dir": "./data/weatherbench",
+      "urban_kg_dir": "./data/urban_kg",
+      "toy_graph_path": "./data/toy_graph.json"
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.10857753455638885,
+      "val_loss": 0.06654971837997437,
+      "train_metrics": {
+        "mse": 0.03512407839298248,
+        "mae": 0.14489245414733887
+      },
+      "val_metrics": {
+        "mse": 0.01663742959499359,
+        "mae": 0.116266168653965
+      }
+    }
+  ],
+  "environment": {
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "torch": "2.11.0+cpu",
+    "device": "cpu"
+  }
+}

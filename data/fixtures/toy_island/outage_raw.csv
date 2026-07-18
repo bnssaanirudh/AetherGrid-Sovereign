@@ -1,0 +1,4 @@
+event_id,target_node_id,timestamp,confidence,is_synthetic
+evt_001,power_node_0,2026-07-15T01:00:00Z,0.95,true
+evt_002,poi_social_node_1,2026-07-15T02:30:00Z,0.85,true
+evt_003,road_segment_2,2026-07-15T03:15:00Z,0.72,true

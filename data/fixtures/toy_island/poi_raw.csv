@@ -1,0 +1,4 @@
+poi_id,category,longitude,latitude
+poi_hosp_01,healthcare,-1.45,50.55
+poi_school_01,education,-1.42,50.58
+poi_school_02,education,-1.48,50.52

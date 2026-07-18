@@ -1,0 +1,8 @@
+{
+  "theorem": "Topology-Preserving Phase Theorem",
+  "tested_function": "TopologyPreservingPhaseTheorem.test_property_numerical",
+  "samples_tested": 10005,
+  "max_numerical_error": 1.4210854715202004e-14,
+  "passed": true,
+  "note": "This local operation guarantees magnitude preservation at the node embedding level, distinct from whole-network topology preservation or predictive robustness."
+}

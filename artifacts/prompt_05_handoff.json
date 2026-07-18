@@ -1,0 +1,33 @@
+{
+  "changed_files": [
+    "schemas.py",
+    "event_dataset.py",
+    "splits.py",
+    "ego_sampler.py",
+    "multi_task_heads.py",
+    "hgt_model.py",
+    "intervention.py",
+    "metrics.py",
+    "trainer.py",
+    "legacy/test_pl.py"
+  ],
+  "migrations": [
+    "Archived test_pl.py to legacy/test_pl.py"
+  ],
+  "commands_run": [
+    "Move-Item test_pl.py legacy/test_pl.py",
+    "python run_prompt5_smoke.py"
+  ],
+  "test_results": {
+    "leakage_audit": "Passed",
+    "sampler_coverage": "Logged",
+    "multi_task_heads": "Smoke test passed"
+  },
+  "measured_limitations": [
+    "Smoke test uses dummy generated data rather than full graph parsing."
+  ],
+  "known_risks": [
+    "PyTorch Geometric HeteroData structures might require minor alignment when swapping encoder backends."
+  ],
+  "starting_point_for_next_prompt": "Commit after Prompt 5 handoff. End-to-end framework exists, ready for certification bounds."
+}

@@ -1,0 +1,19 @@
+# AetherGrid-Sovereign Data Provenance Claims Sheet
+# Track the levels of observation versus simulation/synthetic fallbacks used across model runs.
+
+provenance_registry:
+  toy_smoke_run:
+    real_topology: false
+    real_hazard_data: false
+    real_outage_labels: false
+    semi_synthetic_labels: true
+    source_citation: "synthetic_toy_fixture"
+    release_restriction: "public"
+
+  london_district_trial:
+    real_topology: true
+    real_hazard_data: true
+    real_outage_labels: false
+    semi_synthetic_labels: true
+    source_citation: "osm_and_synthetic_cascade"
+    release_restriction: "restricted"

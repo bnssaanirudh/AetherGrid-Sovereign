@@ -1,0 +1,29 @@
+# NAS Search Space for Q-AVOA
+
+search_space:
+  hidden_dim:
+    type: categorical
+    values: [32, 64, 128, 256]
+
+  num_layers:
+    type: categorical
+    values: [1, 2, 3, 4]
+
+  num_heads:
+    type: categorical
+    values: [2, 4, 8]
+
+  fuzzy_slope:
+    type: continuous
+    min: 0.5
+    max: 5.0
+
+  dropout:
+    type: continuous
+    min: 0.0
+    max: 0.5
+
+  lr:
+    type: continuous
+    min: 1.0e-4
+    max: 1.0e-2

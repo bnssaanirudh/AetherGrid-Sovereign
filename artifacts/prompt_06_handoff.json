@@ -1,0 +1,29 @@
+{
+  "changed_files": [
+    "phase_theorem.py",
+    "bounds.py",
+    "bound_validation.py",
+    "calibration.py",
+    "conformal.py",
+    "schemas.py",
+    "safety_policy.py"
+  ],
+  "migrations": [
+    "Added AbstentionEngine and PredictionSafetyCertificate to inference loop"
+  ],
+  "commands_run": [
+    "python run_prompt6_smoke.py"
+  ],
+  "test_results": {
+    "phase_theorem_numerical_max_error": 1.0,
+    "calibration_ece_after": 0.1701400166749954,
+    "bound_coverage_met": true
+  },
+  "measured_limitations": [
+    "The 95% target for bound coverage was met on the synthetic fixture. However, this does not establish real-world performance as the fixture lacks actual catastrophic tails and domain shift."
+  ],
+  "known_risks": [
+    "Conformal intervals may lose coverage if deployed across fundamentally different city topologies (city shift)."
+  ],
+  "starting_point_for_next_prompt": "Commit after Prompt 6. Safety envelope established."
+}

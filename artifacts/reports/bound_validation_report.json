@@ -1,0 +1,29 @@
+{
+  "total_events": 100,
+  "overall_coverage": 0.99,
+  "coverage_ci_95": [
+    0.9704982462327102,
+    1.0095017537672897
+  ],
+  "mean_tightness": 137.85760872980842,
+  "target_coverage_met": true,
+  "stratified_coverage": {
+    "graph_size": {
+      "small": 0.9795918367346939,
+      "medium": 1.0,
+      "large": 0.0
+    },
+    "dropout_level": {
+      "low": 1.0,
+      "high": 0.9830508474576272
+    },
+    "cascade_type": {
+      "power_failure": 0.99
+    },
+    "district": {
+      "A": 1.0,
+      "B": 0.9811320754716981
+    }
+  },
+  "num_failure_cases": 1
+}

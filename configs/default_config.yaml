@@ -1,0 +1,64 @@
+# AetherGrid-Sovereign default configuration
+
+model:
+  hidden_dim: 64
+  num_layers: 2
+  num_heads: 4
+  dropout: 0.1
+  quantize: false
+
+training:
+  epochs: 100
+  learning_rate: 0.001
+  weight_decay: 1.0e-5
+  batch_size: 1          # full-graph training (single HeteroData)
+  grad_clip: 1.0
+  patience: 15           # early stopping patience
+  device: "cpu"          # "cuda" if GPU available
+  seed: 42
+  deterministic: false
+  val_ratio: 0.2
+  output_dir: "runs"
+  task_type: "regression_size"
+  labels:
+    mode: "synthetic"     # synthetic | file
+    path: ""
+profile: "research"
+fuzzy_family: "IFS"
+
+nas:
+  enabled: true
+  population_size: 20
+  max_iter: 50
+  proxy_epochs: 3
+  chaotic_map: "tent"    # options: logistic, tent, sine, chebyshev, gauss
+  max_time_seconds: 600
+  patience: 10
+  min_delta: 1.0e-4
+  history_csv_path: "runs/nas_history.csv"
+  search_space_path: "configs/nas_search_space.yaml"
+
+graph:
+  num_power: 50
+  num_hospital: 20
+  num_road: 200
+  num_citizen: 100
+  edge_density: 0.05
+  normalize_features: true
+  seed: 42
+  use_toy_data: false
+  toy_data_path: "./data/toy_graph.json"
+
+watchdog:
+  strict: true
+  run_every_n_epochs: 1
+
+logging:
+  level: INFO
+  log_file: "runs/aethergrid.log"
+
+datasets:
+  osm_cache_dir: "./data/cache"
+  weatherbench_dir: "./data/weatherbench"
+  urban_kg_dir: "./data/urban_kg"
+  toy_graph_path: "./data/toy_graph.json"
