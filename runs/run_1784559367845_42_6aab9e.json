@@ -1,0 +1,46 @@
+{
+  "run_id": "run_1784559367845_42_6aab9e",
+  "timestamp": "2026-07-20T14:56:07.845990Z",
+  "code_commit": "fac77ac9fa0abb53ae6282ef12de4f463a383220",
+  "environment_hardware": {
+    "os": "Windows",
+    "os_release": "10",
+    "python_version": "3.11.9",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+    "torch_version": "2.11.0+cpu",
+    "cuda_available": false
+  },
+  "model_variant": "sage",
+  "phase_variant": "none",
+  "fuzzy_family": "IFS",
+  "hyperparameters": {
+    "hidden_dim": 16,
+    "graph_size": "small",
+    "seed": 42
+  },
+  "seed": 42,
+  "dropout_rate": 0.5,
+  "missingness_conditions": {},
+  "snapshot_hash": "small_hash",
+  "training_budget": "standard",
+  "calibration_artifact": null,
+  "status": "success",
+  "retries": 0,
+  "failure_reason": null,
+  "metrics": {
+    "auroc": 0.8605079115385719,
+    "auprc": 0.6710349912487622,
+    "ece": 0.265939859118512,
+    "f1": 0.6452560399464918,
+    "cascade_size_mae": 4.165228822139361,
+    "radius_hops_error": 0.7670719656255488,
+    "auroc_ci": [
+      0.8605079115385719,
+      0.8605079115385719
+    ]
+  },
+  "latency_ms": 6.000757217407227,
+  "peak_memory_mb": 0.0,
+  "timestamp_updated": "2026-07-20T14:56:07.922761Z"
+}

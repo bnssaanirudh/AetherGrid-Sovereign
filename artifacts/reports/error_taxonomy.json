@@ -1,0 +1,22 @@
+{
+  "errors": [
+    {
+      "id": "ERR_01",
+      "class": "sampling_omission",
+      "count": 2,
+      "description": "Failure to sample highly distant cascade nodes due to ego boundary."
+    },
+    {
+      "id": "ERR_02",
+      "class": "stale_edge_handling",
+      "count": 5,
+      "description": "Obsolete topology causing overconfident cascading prediction."
+    },
+    {
+      "id": "ERR_03",
+      "class": "contradictory_telemetry",
+      "count": 3,
+      "description": "Sensors reporting conflicting state memberships (IFS constraint bounds)."
+    }
+  ]
+}

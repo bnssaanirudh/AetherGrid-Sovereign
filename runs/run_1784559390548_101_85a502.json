@@ -1,0 +1,35 @@
+{
+  "run_id": "run_1784559390548_101_85a502",
+  "timestamp": "2026-07-20T14:56:30.548082Z",
+  "code_commit": "fac77ac9fa0abb53ae6282ef12de4f463a383220",
+  "environment_hardware": {
+    "os": "Windows",
+    "os_release": "10",
+    "python_version": "3.11.9",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+    "torch_version": "2.11.0+cpu",
+    "cuda_available": false
+  },
+  "model_variant": "gcn",
+  "phase_variant": "none",
+  "fuzzy_family": "IFS",
+  "hyperparameters": {
+    "hidden_dim": 16,
+    "graph_size": "medium",
+    "seed": 101
+  },
+  "seed": 101,
+  "dropout_rate": 0.2,
+  "missingness_conditions": {},
+  "snapshot_hash": "medium_hash",
+  "training_budget": "standard",
+  "calibration_artifact": null,
+  "status": "failed",
+  "retries": 0,
+  "failure_reason": "'GCNConv' received a tuple of node features as input while this layer does not support bipartite message passing. Please try other layers such as 'SAGEConv' or 'GraphConv' instead",
+  "metrics": {},
+  "latency_ms": 0.0,
+  "peak_memory_mb": 0.0,
+  "timestamp_updated": "2026-07-20T14:56:30.620274Z"
+}

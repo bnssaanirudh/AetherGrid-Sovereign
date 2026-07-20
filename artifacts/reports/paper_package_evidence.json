@@ -1,0 +1,43 @@
+{
+  "dataset_splits": {
+    "train_nodes": 50,
+    "val_nodes": 20,
+    "test_nodes": 30
+  },
+  "reproducibility_checklist": {
+    "code_available": true,
+    "deterministic_seeds_used": true,
+    "hardware_reported": true,
+    "run_registry_canonical": true
+  },
+  "claim_evidence_matrix": [
+    {
+      "claim": "Complex-Valued Pythagorean Fuzzy Attention (CV-PFA) improves cascading failure prediction calibration.",
+      "evidence_run_ids": [
+        "run_1784559402258_42_1d4092",
+        "run_1784559402414_101_1d4092",
+        "run_1784559402535_2026_1d4092",
+        "run_1784559402664_42_1d4092",
+        "run_1784559402788_101_1d4092",
+        "run_1784559402910_2026_1d4092",
+        "run_1784559403032_42_1d4092",
+        "run_1784559403143_101_1d4092",
+        "run_1784559403255_2026_1d4092",
+        "run_1784559403378_42_1d4092",
+        "run_1784559403509_101_1d4092",
+        "run_1784559403644_2026_1d4092",
+        "run_1784559403765_42_1d4092",
+        "run_1784559403891_101_1d4092",
+        "run_1784559404018_2026_1d4092",
+        "run_1784559404155_42_1d4092",
+        "run_1784559404308_101_1d4092",
+        "run_1784559404465_2026_1d4092"
+      ],
+      "metric_observed": "Lower ECE compared to standard GCN/GAT baselines."
+    }
+  ],
+  "limitations_ledger": [
+    "The quantum simulator (VQC) has high classical simulation overhead scaling exponentially with qubit count.",
+    "Topological shift across cities of significantly different structures might decay conformal coverage."
+  ]
+}

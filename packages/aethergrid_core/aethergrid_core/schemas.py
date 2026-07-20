@@ -97,15 +97,39 @@ class TriggerEvent(BaseRecord):
 class CascadeLabel(BaseRecord):
     node_id: str
     task_type: Literal["binary_occurrence", "multiclass_horizon", "regression_size"]
+    # Label value: int for occurrence/horizon, float for regression size
     value: Union[int, float]
 
 
-class CascadePrediction(BaseRecord):
-    prediction_id: str
+class InterventionCandidate(BaseModel):
     node_id: str
-    predicted_value: Union[float, int, List[float]]
-    confidence: float = Field(..., ge=0.0, le=1.0)
-    task_type: Literal["binary_occurrence", "multiclass_horizon", "regression_size"]
+    action: Literal["remove", "reinforce", "isolate", "repair"]
+
+
+class ScenarioRequest(BaseRecord):
+    trigger_selection: List[str] = Field(..., description="List of trigger node IDs")
+    hazard_override: Optional[float] = Field(None, description="Override the hazard intensity (0-1)")
+    sensor_dropout_level: float = Field(0.0, description="Fraction of sensors dropped (0-1)", ge=0.0, le=1.0)
+    phase_model_variant: str = Field("default", description="Variant of phase model to apply")
+    intervention_candidates: List[InterventionCandidate] = Field(default_factory=list)
+
+
+class CascadePrediction(BaseRecord):
+    trace_id: str = Field(..., description="Trace ID for provenance")
+    predicted_occurrence: float = Field(..., description="Probability of cascade occurrence", ge=0.0, le=1.0)
+    predicted_size: float = Field(..., description="Predicted size/count of cascade", ge=0.0)
+    predicted_radius_graph: float = Field(..., description="Predicted radius in hops", ge=0.0)
+    predicted_radius_physical: Optional[float] = Field(None, description="Predicted radius in physical units", ge=0.0)
+    predicted_horizon: str = Field(..., description="E.g., short, medium, long")
+    affected_nodes: Dict[str, float] = Field(default_factory=dict, description="Node ID to probability mapping")
+    
+    # Validation/Cert fields (reserved for Prompt 6)
+    calibration_fields: Optional[Dict[str, Any]] = None
+    bound_fields: Optional[Dict[str, Any]] = None
+    
+    # Provenance
+    data_version: str
+    model_version: str
 
 
 class BoundCertificate(BaseRecord):
@@ -139,3 +163,44 @@ class PredictionTrace(BaseRecord):
     input_trigger_id: str
     visited_nodes: List[str]
     propagation_latencies: List[float]
+
+
+class AbstentionRecord(BaseModel):
+    reason_code: str = Field(..., description="E.g., OOD_DRIFT, MISSING_CALIBRATION, LOW_COVERAGE")
+    description: str
+    safe_next_actions: List[str]
+
+
+class PredictionSafetyCertificate(BaseRecord):
+    trace_id: str
+    snapshot_hash: str
+    trigger_id: str
+    model_artifact_hash: str
+    calibration_artifact_hash: str
+    data_provenance_class: str = Field("research", description="E.g., research, production")
+    fuzzy_family: str
+    phase_variant: str
+    
+    sampler_coverage: float
+    calibration_status: str = Field(..., description="E.g., calibrated, uncalibrated")
+    watchdog_status: str = Field("passed", description="E.g., passed, failed")
+    ood_status: str = Field("in_distribution", description="E.g., in_distribution, ood")
+    
+    # Mutually exclusive: either we have a prediction with intervals, or we abstained
+    prediction: Optional[CascadePrediction] = None
+    conformal_intervals: Optional[Dict[str, Any]] = Field(None, description="Prediction sets or intervals")
+    bound_status: Optional[Dict[str, Any]] = Field(None, description="Bound mode, value, coverage status, tightness")
+    
+    abstention: Optional[AbstentionRecord] = None
+    limitations_warning: str = Field(
+        "Decision support only. Human oversight required.",
+        description="Mandatory safety warning"
+    )
+
+    @model_validator(mode="after")
+    def validate_exclusivity(self) -> PredictionSafetyCertificate:
+        if self.prediction is not None and self.abstention is not None:
+            raise ValueError("Certificate cannot contain both a prediction and an abstention record.")
+        if self.prediction is None and self.abstention is None:
+            raise ValueError("Certificate must contain either a prediction or an abstention record.")
+        return self

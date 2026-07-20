@@ -1,0 +1,53 @@
+{
+  "changed_files": [
+    "packages/models/src/models/baselines.py",
+    "packages/models/src/models/__init__.py",
+    "packages/training/src/training/registry.py",
+    "packages/training/src/training/__init__.py",
+    "packages/aethergrid_core/aethergrid_core/schemas.py",
+    "packages/evaluation/evaluation/calibration.py",
+    "packages/evaluation/evaluation/conformal.py",
+    "packages/evaluation/evaluation/bound_validation.py",
+    "packages/evaluation/evaluation/intervention.py",
+    "packages/sovereign_watchdog/sovereign_watchdog/safety_policy.py",
+    "experiments/matrix.py",
+    "experiments/test_aethergrid.py",
+    "tests/unit/test_benchmarks.py"
+  ],
+  "migrations": [
+    "Integrated 12 baselines (GCN, SAGE, GAT, HGT, TemporalGNN, Percolation, Fuzzy-GAT, and QF-HGT variants) under a common API.",
+    "Synchronized packaging directories for aethergrid_core, evaluation, and sovereign_watchdog to resolve imports correctly.",
+    "Integrated Local JSON Run Registry to track seeds, configurations, resources, and evaluation statistics."
+  ],
+  "commands_run": [
+    "python experiments/matrix.py --tier smoke",
+    "python experiments/matrix.py --tier standard",
+    "python -m pytest tests/unit/test_benchmarks.py"
+  ],
+  "test_results": {
+    "regression_benchmarks_passed": 5,
+    "experiments_test_suite_passed": 14,
+    "standard_experiment_runs_completed": 162
+  },
+  "measured_limitations": [
+    "Quantum-fuzzy VQC attention features require high simulation latency when run classically (default.qubit backend)."
+  ],
+  "known_risks": [
+    "Sensor dropout exceeding 50% leads to significant degradation of classification AUROC and calibration quality."
+  ],
+  "starting_point_for_next_prompt": "Commit: Complete prompt 7 implementation of baseline and experiment registries, experiment matrix, and CI regression checks. Ready for manuscript final review.",
+  "generated_artifacts": {
+    "experiment_registry": "artifacts/experiment_registry_export.json",
+    "results_table": "artifacts/tables/experiments_results.csv",
+    "main_results_summary": "artifacts/tables/main_results_table.csv",
+    "plots": [
+      "artifacts/plots/accuracy_vs_dropout.png",
+      "artifacts/plots/ece_by_model.png",
+      "artifacts/plots/latency_vs_size.png"
+    ],
+    "reports": [
+      "artifacts/reports/paper_package_evidence.json",
+      "artifacts/reports/error_taxonomy.json"
+    ]
+  }
+}

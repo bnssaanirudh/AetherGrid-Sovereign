@@ -44,7 +44,7 @@ def test_ifs_constraint_satisfied():
 
 
 def test_fuzzy_attention_forward():
-    from core.fuzzy_attention import IntuitionisticFuzzyAttention
+    from models import IntuitionisticFuzzyAttention
     attn = IntuitionisticFuzzyAttention(in_dim=16, num_heads=2)
     N, E = 8, 12
     query = torch.randn(N, 16)
@@ -64,7 +64,7 @@ def test_fuzzy_attention_forward():
 # ---------------------------------------------------------------------------
 
 def test_qf_fusion_output_shape():
-    from core.quantum_fuzzy_fusion import QuantumFuzzyFusion
+    from models import QuantumFuzzyFusion
     block = QuantumFuzzyFusion(src_dim=16, dst_dim=16, out_dim=16, num_heads=2)
     N_src, N_dst, E = 10, 8, 15
     x_src = torch.randn(N_src, 16)
