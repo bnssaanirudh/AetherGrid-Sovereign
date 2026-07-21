@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+:root {
+  /* Default to dark mode for AetherGrid */
+  --background: #0b0d10; /* Cantor8 charcoal */
+  --foreground: #f8fafc; /* slate-50 */
+  
+  --accent: #22d3ee; /* cyan-400 */
+  --accent-muted: rgba(34, 211, 238, 0.2);
+  --border-subtle: rgba(248, 250, 252, 0.05);
+  --surface: #13161c; /* Slightly lighter charcoal */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-border-subtle: var(--border-subtle);
+  --color-surface: var(--surface);
+  
+  --color-cantor-blue: #1350bb;
+  --color-cantor-light: #6ce5ff;
+  --color-cantor-black: #111111;
+  
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(248, 250, 252, 0.2);
+}
+
+/* Typography utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Dashboard Specific Styles */
+:root {
+  --bg-dark: #0b0d10;
+  --bg-panel: rgba(11, 13, 16, 0.95);
+  --bg-panel-hover: rgba(20, 24, 30, 0.98);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(255, 255, 255, 0.15);
+  --text-main: #f8fafc;
+  --text-muted: #8b949e;
+  --text-accent: #22d3ee;
+  --accent-primary: #22d3ee;
+  --accent-primary-dim: rgba(34, 211, 238, 0.1);
+  --accent-secondary: #8b5cf6;
+  --accent-secondary-dim: rgba(139, 92, 246, 0.1);
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --success: #10b981;
+}
+
+.main-layout {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+}
+
+.glass-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 0px;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.8);
+  transition: all 0.2s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--border-glow);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 2px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary {
+  background: var(--text-main);
+  color: var(--bg-dark);
+  border-color: var(--text-main);
+}
+
+.btn-primary:hover {
+  background: transparent;
+  color: var(--text-main);
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-muted);
+}
+
+.glow-effect {
+  /* Removed glow effect */
+}
+
+/* Cantor8 specific utility classes */
+.bg-cantor-blue {
+  background-color: var(--color-cantor-blue);
+}
+.bg-cantor-black {
+  background-color: var(--color-cantor-black);
+}
+
+.thin-line-path {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-width: 1px 1px 0 0;
+  border-top-right-radius: 12px;
+  pointer-events: none;
+}
+
+.pixel-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-auto-rows: 40px;
+  width: 100%;
+}
+
+.pixel-block {
+  width: 100%;
+  height: 100%;
+}
+.pixel-blue { background-color: var(--color-cantor-blue); }
+.pixel-light { background-color: var(--color-cantor-light); }
+.pixel-black { background-color: var(--color-cantor-black); }
