@@ -41,16 +41,15 @@ export function Navbar() {
         {/* Desktop Nav - Middle */}
         <div className="hidden md:flex items-stretch text-sm font-medium text-white/90">
           <Link href="/" className="flex items-center px-6 bg-white text-cantor-blue">Home</Link>
-          <Link href="#architecture" className="flex items-center px-6 hover:bg-white/10 transition-colors">Products</Link>
-          <Link href="#capabilities" className="flex items-center px-6 hover:bg-white/10 transition-colors">Partners</Link>
-          <Link href="#evidence" className="flex items-center px-6 hover:bg-white/10 transition-colors">News</Link>
-          <a href={siteConfig.links.github} className="flex items-center px-6 hover:bg-white/10 transition-colors">Blog</a>
+          <Link href="/products" className="flex items-center px-6 hover:bg-white/10 transition-colors">Products</Link>
+          <Link href="/news" className="flex items-center px-6 hover:bg-white/10 transition-colors">News</Link>
+          <Link href="/blog" className="flex items-center px-6 hover:bg-white/10 transition-colors">Blog</Link>
         </div>
 
         {/* Desktop Nav - Right */}
         <div className="hidden md:flex items-stretch text-sm font-medium text-white/90">
-          <Link href="#career" className="flex items-center px-4 hover:bg-white/10 transition-colors">Career</Link>
-          <Link href="#company" className="flex items-center px-4 hover:bg-white/10 transition-colors">Company</Link>
+          <Link href="/career" className="flex items-center px-4 hover:bg-white/10 transition-colors">Career</Link>
+          <Link href="/company" className="flex items-center px-4 hover:bg-white/10 transition-colors">Company</Link>
           <div className="flex items-center pl-4 py-2">
             <Link
               href={siteConfig.links.dashboard}
@@ -76,8 +75,11 @@ export function Navbar() {
       {mobileOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-cantor-blue border-b border-white/10 px-6 py-4 flex flex-col gap-4 shadow-xl">
           <Link href="/" onClick={() => setMobileOpen(false)} className="text-white bg-white/20 px-4 py-2 rounded">Home</Link>
-          <Link href="#architecture" onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white px-4">Products</Link>
-          <Link href="#capabilities" onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white px-4">Partners</Link>
+          <Link href="/products" onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white px-4">Products</Link>
+          <Link href="/news" onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white px-4">News</Link>
+          <Link href="/blog" onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white px-4">Blog</Link>
+          <Link href="/career" onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white px-4">Career</Link>
+          <Link href="/company" onClick={() => setMobileOpen(false)} className="text-white/80 hover:text-white px-4">Company</Link>
           <Link href={siteConfig.links.dashboard} className="text-white font-medium bg-white/10 px-4 py-2 mt-4 flex items-center justify-between">
             Get in Touch <ArrowUpRight className="w-4 h-4" />
           </Link>

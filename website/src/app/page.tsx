@@ -3,6 +3,8 @@ import { Hero } from "@/components/Hero";
 import { TransitionBlueToBlack } from "@/components/TransitionBlueToBlack";
 import { ProductSuite } from "@/components/ProductSuite";
 import { NetworkSection } from "@/components/NetworkSection";
+import { NewsroomSection } from "@/components/NewsroomSection";
+import { CompanySection } from "@/components/CompanySection";
 import { Footer } from "@/components/Footer";
 
 export default function Home() {
@@ -13,6 +15,8 @@ export default function Home() {
       <TransitionBlueToBlack />
       <ProductSuite />
       <NetworkSection />
+      <NewsroomSection />
+      <CompanySection />
       <Footer />
     </main>
   );
