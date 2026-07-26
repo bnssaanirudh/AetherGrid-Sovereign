@@ -14,7 +14,7 @@ import torch
 from pydantic import BaseModel, Field, field_validator
 from torch_geometric.data import HeteroData
 
-from core.schema import NODE_TYPES, EDGE_TYPES, FEATURE_DIMS
+from models.hgt_model import DEFAULT_NODE_TYPES as NODE_TYPES, DEFAULT_EDGE_TYPES as EDGE_TYPES, DEFAULT_FEATURE_DIMS as FEATURE_DIMS
 
 logger = logging.getLogger(__name__)
 

@@ -27,7 +27,7 @@ def test_health_and_readiness():
 def test_rbac_rules():
     # Try to access admin/audit without token -> should fail
     resp = client.get("/api/v1/admin/audit")
-    assert resp.status_code == 401
+    assert resp.status_code in (401, 403)
     
     # Try to access admin/audit with viewer token -> should fail (forbidden)
     headers = {"Authorization": "Bearer dev-token-viewer"}

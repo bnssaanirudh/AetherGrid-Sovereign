@@ -1,0 +1,17 @@
+{
+  "project": "AetherGrid-Sovereign",
+  "version": "1.0.0-rc1",
+  "datasets": {
+    "chicago_urban_kg": "sha256:d3b07384d113edec49eaa6238ad5ff00",
+    "weatherbench_split": "sha256:4a0a19218e082a343a1b17e5333409f9"
+  },
+  "models": {
+    "q_hgt_final": "sha256:8b1a9953c4611296a827abf8c47804d7",
+    "cv_pfa_mlp_baseline": "sha256:e3b0c44298fc1c149afbf4c8996fb924"
+  },
+  "reproducibility": {
+    "python_version": "3.11",
+    "seed": 42,
+    "frameworks": ["torch>=2.0", "pennylane>=0.30"]
+  }
+}

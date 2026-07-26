@@ -25,25 +25,25 @@ const mockPhaseData = [
   { subject: 'Calib', A: 65, B: 85, fullMark: 150 },
 ];
 
-export default function SafetyDashboard() {
+export default function SafetyDashboard({ certificate }: { certificate?: any }) {
   return (
     <div className="safety-dashboard">
       <div className="cert-header">
         <ShieldCheck size={28} color="var(--success)" />
         <div>
           <h2>Prediction Certificate</h2>
-          <p className="text-muted">ID: cert_success_01 • 99% Coverage</p>
+          <p className="text-muted">ID: {certificate?.id || "cert_pending"} • {(certificate?.sampler_coverage || 0.99) * 100}% Coverage</p>
         </div>
       </div>
 
       <div className="metric-cards">
         <div className="card">
           <div className="card-label">Bound Mode</div>
-          <div className="card-value">Analytic</div>
+          <div className="card-value">{certificate?.bound_status?.mode || "Analytic"}</div>
         </div>
         <div className="card">
           <div className="card-label">Tightness</div>
-          <div className="card-value">6.45</div>
+          <div className="card-value">{certificate?.bound_status?.tightness || 6.45}</div>
         </div>
         <div className="card">
           <div className="card-label">Data Age</div>

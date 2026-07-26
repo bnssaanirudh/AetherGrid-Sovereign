@@ -21,6 +21,11 @@ class Settings:
         self.MINIO_ENDPOINT: Optional[str] = os.getenv("MINIO_ENDPOINT", None)
         self.MINIO_ACCESS_KEY: Optional[str] = os.getenv("MINIO_ACCESS_KEY", None)
         self.MINIO_SECRET_KEY: Optional[str] = os.getenv("MINIO_SECRET_KEY", None)
+
+        # External Integrations (Online)
+        self.OPENWEATHER_API_KEY: Optional[str] = os.getenv("OPENWEATHER_API_KEY", None)
+        self.OIDC_DOMAIN: Optional[str] = os.getenv("OIDC_DOMAIN", None)  # e.g., "dev-aether.us.auth0.com"
+        self.OIDC_API_AUDIENCE: Optional[str] = os.getenv("OIDC_API_AUDIENCE", None)
         self.MINIO_BUCKET_NAME: str = os.getenv("MINIO_BUCKET_NAME", "aethergrid")
         
         # Local Storage Fallback Directories

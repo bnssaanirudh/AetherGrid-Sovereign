@@ -1,0 +1,803 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AetherGrid-Sovereign API",
+    "description": "Operational API platform for the AetherGrid-Sovereign cascade prediction system.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "System Status"
+        ],
+        "summary": "Health Check",
+        "description": "Returns general service health.",
+        "operationId": "health_check_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Check Api V1 Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/readiness": {
+      "get": {
+        "tags": [
+          "System Status"
+        ],
+        "summary": "Readiness Check",
+        "description": "Returns detailed readyness including dependencies status.",
+        "operationId": "readiness_check_api_v1_readiness_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Readiness Check Api V1 Readiness Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/events/ingest": {
+      "post": {
+        "tags": [
+          "Ingestion & Snapshots"
+        ],
+        "summary": "Ingest Event",
+        "description": "Ingests versioned sensor/events. Guaranteed idempotent.",
+        "operationId": "ingest_event_api_v1_events_ingest_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngestPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Ingest Event Api V1 Events Ingest Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/snapshots/materialize": {
+      "post": {
+        "tags": [
+          "Ingestion & Snapshots"
+        ],
+        "summary": "Materialize Snapshot",
+        "description": "Triggers materialization of a new graph snapshot from verified events.",
+        "operationId": "materialize_snapshot_api_v1_snapshots_materialize_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "parent_hash",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Parent Hash"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Materialize Snapshot Api V1 Snapshots Materialize Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/models/register": {
+      "post": {
+        "tags": [
+          "Model Serving"
+        ],
+        "summary": "Register Model",
+        "description": "Registers a model artifact with checksum verification.",
+        "operationId": "register_model_api_v1_models_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterModelPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Register Model Api V1 Models Register Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/models/approve/{model_id}": {
+      "post": {
+        "tags": [
+          "Model Serving"
+        ],
+        "summary": "Approve Model",
+        "description": "Approves a model artifact, setting it as active. Demotes the previous active model.",
+        "operationId": "approve_model_api_v1_models_approve__model_id__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Model Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Approve Model Api V1 Models Approve  Model Id  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/models/rollback": {
+      "post": {
+        "tags": [
+          "Model Serving"
+        ],
+        "summary": "Rollback Model",
+        "description": "Rolls back the active model to the previous approved/archived model artifact.",
+        "operationId": "rollback_model_api_v1_models_rollback_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Rollback Model Api V1 Models Rollback Post"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/models/active": {
+      "get": {
+        "tags": [
+          "Model Serving"
+        ],
+        "summary": "Get Active Model",
+        "description": "Retrieves metadata of the currently active model.",
+        "operationId": "get_active_model_api_v1_models_active_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Active Model Api V1 Models Active Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/scenarios/sync": {
+      "post": {
+        "tags": [
+          "Scenarios & Predictions"
+        ],
+        "summary": "Run Scenario Sync",
+        "description": "Runs a synchronous small-scenario inference and returns a safety certificate.",
+        "operationId": "run_scenario_sync_api_v1_scenarios_sync_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Run Scenario Sync Api V1 Scenarios Sync Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/scenarios/async": {
+      "post": {
+        "tags": [
+          "Scenarios & Predictions"
+        ],
+        "summary": "Submit Scenario Async",
+        "description": "Submits a scenario to the asynchronous workers queue.",
+        "operationId": "submit_scenario_async_api_v1_scenarios_async_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Submit Scenario Async Api V1 Scenarios Async Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/scenarios/jobs/{job_id}": {
+      "get": {
+        "tags": [
+          "Scenarios & Predictions"
+        ],
+        "summary": "Get Job Status",
+        "description": "Retrieves status and logs/results of an asynchronous job.",
+        "operationId": "get_job_status_api_v1_scenarios_jobs__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Job Status Api V1 Scenarios Jobs  Job Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/scenarios/jobs/{job_id}/cancel": {
+      "post": {
+        "tags": [
+          "Scenarios & Predictions"
+        ],
+        "summary": "Cancel Job",
+        "description": "Cancels a queued or running job.",
+        "operationId": "cancel_job_api_v1_scenarios_jobs__job_id__cancel_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Cancel Job Api V1 Scenarios Jobs  Job Id  Cancel Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/audit": {
+      "get": {
+        "tags": [
+          "Administrative Operations"
+        ],
+        "summary": "Get Audit Logs",
+        "description": "Retrieves append-only operational audit trails.",
+        "operationId": "get_audit_logs_api_v1_admin_audit_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Get Audit Logs Api V1 Admin Audit Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/keys/rotate": {
+      "post": {
+        "tags": [
+          "Administrative Operations"
+        ],
+        "summary": "Rotate Api Key",
+        "description": "Rotates API access credentials.",
+        "operationId": "rotate_api_key_api_v1_admin_keys_rotate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KeyRotationPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Rotate Api Key Api V1 Admin Keys Rotate Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "IngestPayload": {
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "title": "Event Id",
+            "description": "Stable unique ID for idempotency"
+          },
+          "event_type": {
+            "type": "string",
+            "title": "Event Type",
+            "description": "E.g., sensor_reading, trigger_event",
+            "default": "sensor_reading"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data",
+            "description": "Actual record attributes matching schemas"
+          }
+        },
+        "type": "object",
+        "required": [
+          "event_id",
+          "data"
+        ],
+        "title": "IngestPayload"
+      },
+      "KeyRotationPayload": {
+        "properties": {
+          "old_key": {
+            "type": "string",
+            "title": "Old Key",
+            "description": "Key to revoke"
+          },
+          "new_key": {
+            "type": "string",
+            "title": "New Key",
+            "description": "New key to register"
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_key",
+          "new_key"
+        ],
+        "title": "KeyRotationPayload"
+      },
+      "RegisterModelPayload": {
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "title": "Model Id",
+            "description": "Unique model identifier"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "Semantic version string"
+          },
+          "checksum": {
+            "type": "string",
+            "title": "Checksum",
+            "description": "SHA-256 checksum of model artifact"
+          },
+          "config": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Config",
+            "description": "Architecture parameters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_id",
+          "version",
+          "checksum",
+          "config"
+        ],
+        "title": "RegisterModelPayload"
+      },
+      "ScenarioPayload": {
+        "properties": {
+          "trigger_nodes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Trigger Nodes",
+            "description": "Target node IDs to fail"
+          },
+          "hazard_intensity": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Hazard Intensity",
+            "default": 0.8
+          },
+          "sensor_dropout": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Sensor Dropout",
+            "default": 0.0
+          },
+          "trace_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trace Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "trigger_nodes"
+        ],
+        "title": "ScenarioPayload"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

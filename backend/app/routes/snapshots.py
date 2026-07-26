@@ -10,8 +10,7 @@ from ..core.database import db
 from ..core.storage import storage_store
 from ..core.audit import AuditLogger
 from aethergrid_core.schemas import SensorState, GraphSnapshotManifest
-from watchdog.sovereign_watchdog import SovereignWatchdog
-from core.graph_constructor import UrbanGraphConstructor, GraphConfig
+from graph_builder.builder import UrbanGraphConstructor, GraphConfig
 
 router = APIRouter()
 

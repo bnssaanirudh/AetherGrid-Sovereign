@@ -1,6 +1,6 @@
 from .metrics import evaluate_metrics, TaskType
 from .splits import temporal_split, detect_leakage
-from .simulator import CascadeSimulator, CascadeGenerationManifest
+from .simulator import CascadeSimulator
 
 __all__ = [
     "evaluate_metrics",
@@ -8,5 +8,4 @@ __all__ = [
     "temporal_split",
     "detect_leakage",
     "CascadeSimulator",
-    "CascadeGenerationManifest",
 ]

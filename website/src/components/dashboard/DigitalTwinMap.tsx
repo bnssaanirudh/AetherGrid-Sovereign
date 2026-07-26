@@ -3,20 +3,17 @@
 import React, { useState } from 'react';
 import DeckGL from '@deck.gl/react';
 import { ScatterplotLayer, ArcLayer } from '@deck.gl/layers';
-import { Map } from 'react-map-gl/maplibre';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { Map } from 'react-map-gl/mapbox';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Initial viewport settings
 const INITIAL_VIEW_STATE = {
-  longitude: -74.006,
-  latitude: 40.7128,
-  zoom: 11,
-  pitch: 45,
+  longitude: 0,
+  latitude: 20,
+  zoom: 1.5,
+  pitch: 30,
   bearing: 0
 };
-
-// Dark matter style from Carto as a free MapLibre base map
-const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 // Dummy data for visual presentation
 const DUMMY_NODES = [
@@ -31,25 +28,81 @@ const DUMMY_EDGES = [
   { source: [-74.006, 40.7128], target: [-74.02, 40.70], color: [0, 240, 255, 100] },
 ];
 
-export default function DigitalTwinMap() {
+export default function DigitalTwinMap({ certificate }: { certificate?: any }) {
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
 
+    // 1. Parse real data if available, fallback to dummy
+    const isHurricane = certificate?.trigger_id === "substation_a";
+    
+    // Background matrix
+    const bgNodes = certificate?.graph_visualization?.nodes || [];
+    const bgEdges = certificate?.graph_visualization?.edges || [];
+
+    // Narrative overlays
+    let activeEdges = DUMMY_EDGES;
+    let activeNodes = DUMMY_NODES;
+    let blastRadiusData: any[] = [];
+
+    if (certificate) {
+      // Dynamic overlay based on returned nodes
+      activeNodes = bgNodes.slice(0, 10).map((n: any, i: number) => ({
+        id: `trigger_${i}`,
+        position: n.position,
+        color: [255, 30, 30],
+        size: 200
+      }));
+      
+      activeEdges = bgEdges.slice(0, 10).map((e: any) => ({
+        source: e.source,
+        target: e.target,
+        color: [255, 30, 30, 180]
+      }));
+
+      const rad = certificate.prediction?.predicted_radius_graph || 15.0;
+      // Draw blast radius around the active nodes
+      blastRadiusData = activeNodes.map((n: any) => ({
+        position: n.position,
+        radius: rad * 200 // scaled for visibility at global zoom
+      }));
+    }
+
   const layers = [
+    // --- 1. Background Matrix Layers ---
+    new ArcLayer({
+      id: 'background-edges',
+      data: bgEdges,
+      getSourcePosition: (d: any) => d.source,
+      getTargetPosition: (d: any) => d.target,
+      getSourceColor: [0, 240, 255, 30], // faint blue laser lines
+      getTargetColor: [0, 240, 255, 30],
+      getWidth: 1,
+    }),
+    new ScatterplotLayer({
+      id: 'background-nodes',
+      data: bgNodes,
+      getPosition: (d: any) => d.position,
+      getFillColor: [0, 150, 255, 100], // dim blue dots
+      getRadius: 50,
+      radiusUnits: 'meters',
+      stroked: false,
+    }),
+
+    // --- 2. Narrative/Foreground Layers ---
     new ArcLayer({
       id: 'cascade-paths',
-      data: DUMMY_EDGES,
-      getSourcePosition: d => d.source,
-      getTargetPosition: d => d.target,
-      getSourceColor: d => d.color,
-      getTargetColor: d => d.color,
+      data: activeEdges,
+      getSourcePosition: (d: any) => d.source,
+      getTargetPosition: (d: any) => d.target,
+      getSourceColor: (d: any) => d.color,
+      getTargetColor: (d: any) => d.color,
       getWidth: 3,
     }),
     new ScatterplotLayer({
       id: 'infrastructure-nodes',
-      data: DUMMY_NODES,
-      getPosition: d => d.position,
-      getFillColor: d => d.color,
-      getRadius: d => d.size,
+      data: activeNodes,
+      getPosition: (d: any) => d.position,
+      getFillColor: (d: any) => d.color,
+      getRadius: (d: any) => d.size,
       radiusMinPixels: 4,
       radiusMaxPixels: 20,
       opacity: 0.8,
@@ -57,7 +110,20 @@ export default function DigitalTwinMap() {
       getLineColor: [255, 255, 255, 100],
       lineWidthMinPixels: 1,
       pickable: true,
-    })
+    }),
+
+    // --- 3. Blast Radius (Dynamic from bounds) ---
+    new ScatterplotLayer({
+      id: 'blast-radius',
+      data: blastRadiusData,
+      getPosition: (d: any) => d.position,
+      getFillColor: [255, 30, 30, 25], // Transparent red
+      getRadius: (d: any) => d.radius,
+      radiusUnits: 'meters',
+      stroked: true,
+      getLineColor: [255, 30, 30, 150],
+      lineWidthMinPixels: 2,
+    }),
   ];
 
   return (
@@ -70,7 +136,8 @@ export default function DigitalTwinMap() {
       >
         <Map
           reuseMaps
-          mapStyle={MAP_STYLE}
+          mapStyle="mapbox://styles/mapbox/satellite-streets-v12"
+          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "dummy_token"}
         />
       </DeckGL>
     </div>

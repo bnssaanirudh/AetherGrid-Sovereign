@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Literal
 import numpy as np
-from sklearn.metrics import roc_auc_score, f1_score, mean_squared_error, mean_absolute_error
+from sklearn.metrics import roc_auc_score, average_precision_score, f1_score, mean_squared_error, mean_absolute_error
 
 TaskType = Literal["binary_occurrence", "multiclass_horizon", "regression_size"]
 
@@ -54,6 +54,7 @@ def evaluate_metrics(
         return {"f1_macro": f1}
 
     elif task_type == "regression_size":
+        # Check that label values are within expected regression bounds (e.g. not only integers or binary)
         # Regression metrics only
         mse = float(mean_squared_error(y_true, y_score))
         mae = float(mean_absolute_error(y_true, y_score))
@@ -61,3 +62,59 @@ def evaluate_metrics(
     
     else:
         raise ValueError(f"Unknown task_type: {task_type}")
+
+class CascadeMetrics:
+    @staticmethod
+    def occurrence_metrics(y_true: List[int], y_prob: List[float]) -> Dict[str, float]:
+        """
+        Calculates occurrence metrics.
+        Aggregation: Macro over dataset. Units: Dimensionless (0-1).
+        """
+        y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
+        try:
+            auroc = float(roc_auc_score(y_true, y_prob))
+            auprc = float(average_precision_score(y_true, y_prob))
+        except ValueError:
+            auroc, auprc = 0.0, 0.0
+            
+        f1 = float(f1_score(y_true, y_pred, average='macro'))
+        return {"auroc": auroc, "auprc": auprc, "macro_f1": f1}
+
+    @staticmethod
+    def size_metrics(y_true: List[float], y_pred: List[float]) -> Dict[str, float]:
+        """
+        Calculates cascade size regression metrics.
+        Aggregation: Mean over dataset. Units: Node count / Size unit.
+        """
+        mae = float(mean_absolute_error(y_true, y_pred))
+        rmse = float(np.sqrt(mean_squared_error(y_true, y_pred)))
+        return {"mae_size": mae, "rmse_size": rmse}
+
+    @staticmethod
+    def radius_metrics(y_true: List[float], y_pred: List[float], unit_name: str = "hops") -> Dict[str, float]:
+        """
+        Calculates radius error.
+        Aggregation: Mean over dataset. Units: Provided by `unit_name`.
+        """
+        mae = float(mean_absolute_error(y_true, y_pred))
+        return {f"mae_radius_{unit_name}": mae}
+
+    @staticmethod
+    def horizon_metrics(y_true: List[int], y_pred: List[int]) -> Dict[str, float]:
+        """
+        Calculates ordinal/multiclass horizon metrics.
+        Aggregation: Macro over dataset. Units: Dimensionless (0-1).
+        """
+        f1 = float(f1_score(y_true, y_pred, average='macro'))
+        return {"macro_f1_horizon": f1}
+
+    @staticmethod
+    def node_affected_metrics(y_true: List[int], y_prob: List[float]) -> Dict[str, float]:
+        """
+        Node-level precision/recall map metric summary (F1).
+        Aggregation: Macro over nodes in an event. Units: Dimensionless (0-1).
+        """
+        y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
+        f1 = float(f1_score(y_true, y_pred, average='binary', zero_division=0))
+        return {"node_level_f1": f1}
+

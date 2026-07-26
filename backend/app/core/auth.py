@@ -46,6 +46,35 @@ def create_access_token(data: Dict, expires_delta: Optional[timedelta] = None) -
 
 
 def decode_access_token(token: str) -> Dict:
+    # If OIDC_DOMAIN is configured, use PyJWT to validate standard RSA JWT
+    if settings.OIDC_DOMAIN:
+        import jwt
+        from jwt import PyJWKClient
+        try:
+            jwks_url = f"https://{settings.OIDC_DOMAIN}/.well-known/jwks.json"
+            jwks_client = PyJWKClient(jwks_url)
+            signing_key = jwks_client.get_signing_key_from_jwt(token)
+            
+            payload = jwt.decode(
+                token,
+                signing_key.key,
+                algorithms=["RS256"],
+                audience=settings.OIDC_API_AUDIENCE,
+                issuer=f"https://{settings.OIDC_DOMAIN}/"
+            )
+            # Map standard OIDC scopes/permissions to our roles if necessary
+            # For this MVP, we assume the custom claim 'role' or 'https://aethergrid/role' is present
+            role = payload.get("role") or payload.get("https://aethergrid/role", "viewer")
+            payload["role"] = role
+            return payload
+        except Exception as e:
+            print(f"[AUTH ERROR] OIDC Validation failed: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate OIDC credentials.",
+            )
+
+    # Fallback to local HMACSigned Token logic
     try:
         parts = token.split(".")
         if len(parts) != 2:

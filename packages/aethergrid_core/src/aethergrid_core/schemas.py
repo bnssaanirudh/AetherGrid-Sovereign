@@ -190,6 +190,7 @@ class PredictionSafetyCertificate(BaseRecord):
     prediction: Optional[CascadePrediction] = None
     conformal_intervals: Optional[Dict[str, Any]] = Field(None, description="Prediction sets or intervals")
     bound_status: Optional[Dict[str, Any]] = Field(None, description="Bound mode, value, coverage status, tightness")
+    graph_visualization: Optional[Dict[str, Any]] = Field(None, description="Sample of nodes and edges for map visualization")
     
     abstention: Optional[AbstentionRecord] = None
     limitations_warning: str = Field(

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Play, Settings2, ShieldAlert } from 'lucide-react';
 import apiClient from '@/lib/api/client';
 
-export default function ScenarioBuilder() {
+export default function ScenarioBuilder({ onSimulationComplete }: { onSimulationComplete?: (cert: any) => void }) {
   const [city, setCity] = useState("chicago");
   const [hazard, setHazard] = useState("extreme_heat");
   const [loading, setLoading] = useState(false);
@@ -12,15 +12,31 @@ export default function ScenarioBuilder() {
   const runScenario = async () => {
     setLoading(true);
     try {
-      // Example of using the generated OpenAPI client
-      // We are just calling a generic endpoint to show integration
-      const { data, error } = await apiClient.GET("/api/v1/health");
-      
-      // Simulate heavy compute
-      await new Promise(r => setTimeout(r, 2000));
+      // We use the generated OpenAPI client
+      let triggerNodes = ["substation_1", "sensor_node_104"];
+      if (hazard === "hurricane") {
+        triggerNodes = ["substation_a"];
+      }
+
+      // @ts-ignore
+      const { data, error } = await apiClient.POST("/api/v1/scenarios/sync", {
+        headers: {
+          Authorization: "Bearer dev-token-administrator"
+        },
+        body: {
+          trigger_nodes: triggerNodes,
+          target_cities: [city],
+          scenario_scale: "world_class_50_cities",
+          sensor_count_multiplier: 5,
+          hazard_intensity: 0.85,
+          sensor_dropout: 0.15
+        }
+      });
       
       if (error) {
         console.error("API Error:", error);
+      } else if (data && onSimulationComplete) {
+        onSimulationComplete(data);
       }
     } catch (e) {
       console.error(e);

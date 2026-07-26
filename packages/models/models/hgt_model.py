@@ -16,7 +16,7 @@ from torch import Tensor
 from torch_geometric.data import HeteroData
 
 from .hgt_conv import QFHGTConv
-from .hgt_readout import make_failure_readout
+from .multi_task_heads import MultiTaskHead
 from .model_utils import count_parameters
 
 logger = logging.getLogger(__name__)
@@ -85,10 +85,8 @@ class AetherHGT(nn.Module):
             for _ in range(num_layers)
         ])
 
-        # Readout heads
-        self.readout = nn.ModuleDict({
-            ntype: make_failure_readout(hidden_dim, dropout) for ntype in self.node_types
-        })
+        # Multi-task heads for cascade prediction
+        self.multi_task_head = MultiTaskHead(hidden_dim, dropout)
 
         if quantize:
             self._apply_quantization()
@@ -122,11 +120,13 @@ class AetherHGT(nn.Module):
             if return_attention:
                 layer_diagnostics.append(diag)
 
-        failure_probs: Dict[str, Tensor] = {}
-        for ntype in self.node_types:
-            failure_probs[ntype] = self.readout[ntype](x_dict[ntype])
+        # Graph pooling: mean of all node embeddings
+        all_embs = torch.cat([x_dict[nt] for nt in self.node_types if x_dict[nt].size(0) > 0], dim=0)
+        graph_emb = all_embs.mean(dim=0).unsqueeze(0) if all_embs.size(0) > 0 else torch.zeros(1, self.hidden_dim, device=device)
+        
+        predictions = self.multi_task_head(graph_emb, x_dict)
 
-        return failure_probs, layer_diagnostics
+        return predictions, layer_diagnostics
 
     def count_parameters(self) -> int:
         return count_parameters(self)

@@ -14,6 +14,7 @@
     "@deck.gl/react": "^9.3.7",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.25.0",
+    "mapbox-gl": "^3.27.0",
     "maplibre-gl": "^5.24.0",
     "next": "16.2.10",
     "openapi-fetch": "^0.17.0",

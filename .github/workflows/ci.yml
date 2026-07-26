@@ -1,0 +1,54 @@
+name: Fast PR Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest mypy flake8
+      - name: Flake8 Linting
+        run: flake8 packages backend
+      - name: MyPy Type Checking
+        run: mypy packages backend --ignore-missing-imports
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+      - name: Run Pytest
+        run: pytest tests/
+
+  frontend-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+          cache-dependency-path: ./frontend/package-lock.json
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Lint Next.js
+        run: npm run lint --if-present

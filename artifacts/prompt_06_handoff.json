@@ -16,7 +16,7 @@
   ],
   "test_results": {
     "phase_theorem_numerical_max_error": 1.0,
-    "calibration_ece_after": 0.1701400166749954,
+    "calibration_ece_after": 0.1766003886163235,
     "bound_coverage_met": true
   },
   "measured_limitations": [

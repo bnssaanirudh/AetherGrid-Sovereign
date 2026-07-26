@@ -16,12 +16,13 @@ const DigitalTwinMap = dynamic(() => import("@/components/dashboard/DigitalTwinM
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"scenario" | "safety">("scenario");
   const [panelOpen, setPanelOpen] = useState(true);
+  const [certificate, setCertificate] = useState<any>(null);
 
   return (
     <main className="main-layout bg-cantor-black">
       {/* Background Map Layer */}
       <div className="map-container absolute inset-0 z-0">
-        <DigitalTwinMap />
+        <DigitalTwinMap certificate={certificate} />
       </div>
 
       {/* Floating Header (Cantor8 Style Minimalist) */}
@@ -82,7 +83,14 @@ export default function Home() {
                </div>
                
                <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-cantor-black">
-                  {activeTab === "scenario" ? <ScenarioBuilder /> : <SafetyDashboard />}
+                  {activeTab === "scenario" ? (
+                     <ScenarioBuilder onSimulationComplete={(cert: any) => {
+                        setCertificate(cert);
+                        setActiveTab("safety");
+                     }} />
+                  ) : (
+                     <SafetyDashboard certificate={certificate} />
+                  )}
                </div>
             </div>
          )}
